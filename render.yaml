@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: smart-reward-system-api
+    runtime: node
+    rootDir: Server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /test
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: PORT
+        value: 5000
