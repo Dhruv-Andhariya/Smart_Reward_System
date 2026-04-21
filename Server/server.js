@@ -11,6 +11,8 @@ const rewardRoutes = require("./route/rewardRoutes");
 
 const app = express();
 
+const normalizeOrigin = (value) => value.trim().replace(/\/+$/, "");
+
 const configuredOrigins = [
   process.env.CLIENT_URL,
   process.env.FRONTEND_URL,
@@ -18,7 +20,7 @@ const configuredOrigins = [
 ]
   .filter(Boolean)
   .flatMap((value) => value.split(","))
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 
 const allowedOrigins = new Set(configuredOrigins);
@@ -30,8 +32,10 @@ app.use(
         return callback(null, true);
       }
 
-      const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
-      if (isLocalhost || allowedOrigins.has(origin)) {
+      const normalizedOrigin = normalizeOrigin(origin);
+
+      const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalizedOrigin);
+      if (isLocalhost || allowedOrigins.has(normalizedOrigin)) {
         return callback(null, true);
       }
 
