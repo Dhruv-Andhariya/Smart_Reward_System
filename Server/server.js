@@ -15,6 +15,7 @@ const normalizeOrigin = (value) => value.trim().replace(/\/+$/, "");
 
 const configuredOrigins = [
   process.env.CLIENT_URL,
+  process.env.CLIENT_URI,
   process.env.FRONTEND_URL,
   process.env.CORS_ORIGIN
 ]
@@ -35,7 +36,8 @@ app.use(
       const normalizedOrigin = normalizeOrigin(origin);
 
       const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalizedOrigin);
-      if (isLocalhost || allowedOrigins.has(normalizedOrigin)) {
+      const isVercelDomain = /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i.test(normalizedOrigin);
+      if (isLocalhost || isVercelDomain || allowedOrigins.has(normalizedOrigin)) {
         return callback(null, true);
       }
 
